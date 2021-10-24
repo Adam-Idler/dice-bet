@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="./assets/images/dice-icon.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="./assets/scripts/script.js"></script>
+    <link rel="stylesheet" href="./assets/styles/style.css">
+    <title>Dice Bet</title>
+</head>
+<body>
+    <div class="game__wrapper">
+        <div class="game__name">
+            <h1>Dice Bet</h1>
+        </div>
+        <div class="game__main">
+            <div class="game__fields">
+                <form>
+                    <div class="dice-count-text__wrapper">
+                        <p class="game__text">Количество кубиков:</p>
+                        <span class="dice-count__value">0</span>
+                    </div>
+                    <div class="dice-count__wrapper">
+                        <input type="range" value="2" min="1" max="6" class="dice-count">
+                    </div>
+                    <div class="bet__wrapper">
+                        <input type="text" placeholder="Ваша ставка" class="user-bet">
+                        <button class="start-game">Бросить кубики</button>
+                    </div>
+                </form>
+                <p class="game__text">Ставить на:</p>
+                <div class="tabs">
+                    <div class="tab-names">
+                        <div class="tab-name__item tab-name__item_active">Определенное число</div>
+                        <div class="tab-name__item">Больше или меньше</div>
+                        <div class="tab-name__item">Чётное/Нечётное</div>
+                    </div>
+                    <div class="tab-values">
+                        <div class="tab-values__item tab-values__item_active">
+                            <p class="game__text">На какое число ставим?</p>
+                            <input type="text" class="user-exact-number" placeholder="Введите число очков">
+                        </div>
+                        <div class="tab-values__item"></div>
+                        <div class="tab-values__item"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="dice-places">
+        
+            </div>
+        </div>
+        
+
+    </div>
+</body>
+</html>

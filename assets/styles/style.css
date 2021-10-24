@@ -1,0 +1,182 @@
+body, * {
+    margin: 0;
+    padding: 0;
+}
+
+input[type=text],
+input[type=number] {
+    width: 40%;
+    font-size: 18px;
+    padding: 10px;
+    border: 2px solid #fae217;
+    border-radius: 10px;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: #ff5a5a;
+    height: 8px;
+    border-radius: 5px;
+    border-left: 0;
+    border-right: 0;
+    cursor: pointer;
+    margin: 30px 0;
+}
+
+input[type=range]::-ms-track {
+    width: 100%;
+    cursor: pointer;
+    background: transparent;
+    border-color: transparent;
+    color: transparent
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #2F4F4F;
+    cursor: pointer;
+    margin-top: 0px;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d
+}
+
+input[type=range]::-moz-range-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 36px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer
+}
+
+input[type=range]::-ms-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 36px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer
+}
+
+.game__wrapper {
+    width: 40%;
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.dice-count-text__wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.dice-count__value {
+    font-size: 18px;
+}
+
+.game__text {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.game__name {
+    border: 2px solid #fae217;
+    border-radius: 10px;
+    padding: 10px 0;
+}
+
+.game__name h1 {
+    text-align: center;
+    color: #ff5a5a;
+}
+
+.game__main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game__fields {
+    width: 100%;
+}
+
+.dice-count__wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-bet {
+    width: 40%;
+    font-size: 18px;
+    padding: 10px;
+    border: 2px solid #fae217;
+    border-radius: 10px;
+}
+
+.bet__wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.start-game {
+    background-color: #7fee7f;
+    cursor: pointer;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.tab-names {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.tab-name__item {
+    background-color: #eee;
+    color: #999;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 12px 10px;
+    width: 33.333%;
+}
+
+.tab-name__item_active {
+    background-color: #7fee7f;
+    color: #fff;
+}
+
+.tab-name__item:first-child {
+    border-radius: 10px 0px 0px 0px;
+}
+
+.tab-name__item:last-child {
+    border-radius: 0px 10px 0px 0px;
+}
+
+.tab-values {
+    background-color: #efe;
+    padding: 25px;
+}
+
+.user-exact-number {
+    margin-top: 10px;
+}
