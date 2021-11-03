@@ -38,6 +38,7 @@ const sliderValue = document.querySelector('.dice-count__value');
 sliderValue.textContent = rangeSlider.value;
 rangeSlider.addEventListener('input', () => {
     sliderValue.textContent = rangeSlider.value;
+    exactNumberRatio = 1.5 * rangeSlider.value;
 });
 
 // Изменение количества кубиков
@@ -49,11 +50,10 @@ const createDiceElement = () => {
     diceItemsSum.splice(0, diceItemsSum.length);
 
     for (let i = 0; i < rangeSlider.value; i++) {
-        let diceItemValue = generateRandomNumber(1, 6);
+        let diceItemValue = generateRandomNumber(2, 2);
         diceItemElement = document.createElement('div');
         diceItemElement.classList.add('dice__item');
         diceItemsSum.push(diceItemValue);
-        // diceItemElement.setAttribute('data-value', diceItemValue);
 
         if (diceItemWrapper.hasAttribute('data-loaded') && i === rangeSlider.value - 1) {
             diceItemWrapper.removeAttribute('data-loaded');
@@ -93,6 +93,9 @@ const openModal = (modalName) => {
 
             if (totalResultDice) totalResultDice.textContent = countDiceItemsValue()
             if (totalResultUser) totalResultUser.textContent = +userNumber.value
+
+            if (modalName === 'win') modal.querySelector('.winning_result').textContent = +userBet.value * exactNumberRatio;
+            if (modalName === 'loose') modal.querySelector('.loose_result').textContent = +userBet.value;
         }
     });
 };
@@ -109,6 +112,19 @@ modalWrapper.addEventListener('click', (e) => {
     if (e.target !== e.currentTarget) return;
     closeModal();
 });
+document.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && modalWrapper.style.display === 'block') {
+        e.preventDefault();
+        closeModal();
+    }
+});
+
+// Реализация ставки игрока
+const userBalance = document.querySelector('.user-balance_value');
+const userBet = document.querySelector('.user-bet');
+let exactNumberRatio = 1.5 * rangeSlider.value;
+let moreOrLessRatio = 2;
+let evenRatio = 2;
 
 // Обработка нажатие на кнопку старта игры
 const startBtn = document.querySelector('.start-game');
@@ -119,11 +135,14 @@ const startBtnClickHandler = () => {
         return;
     }
 
+    userBalance.textContent -= +userBet.value;
+
     createDiceElement();
     let diceValue = countDiceItemsValue();
 
     if (+userNumber.value === diceValue) {
-        setTimeout(() => openModal('win'), 900)
+        setTimeout(() => openModal('win'), 900);
+        userBalance.textContent = +userBalance.textContent + +userBet.value * exactNumberRatio;
     } else {
         setTimeout(() => openModal('loose'), 900)
     }
@@ -131,7 +150,13 @@ const startBtnClickHandler = () => {
 
 startBtn.addEventListener('click', startBtnClickHandler);
 userNumber.addEventListener('keyup', (e) => {
-    if(e.keyCode == 13){
+    if (e.keyCode == 13) {
+        e.preventDefault();
+        startBtnClickHandler();
+    }
+});
+userBet.addEventListener('keyup', (e) => {
+    if (e.keyCode == 13) {
         e.preventDefault();
         startBtnClickHandler();
     }

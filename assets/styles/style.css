@@ -87,6 +87,7 @@ input[type=range]::-ms-thumb {
 .game__wrapper {
     overflow: hidden;
     width: 40%;
+    min-width: 625px;
     height: 100vh;
     margin: 0 auto;
     display: flex;
@@ -232,7 +233,7 @@ input[type=range]::-ms-thumb {
     transform: translate(-50%, -50%);
     padding: 20px;
     width: 20%;
-    height: 40%;
+    height: 45%;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
@@ -272,6 +273,21 @@ input[type=range]::-ms-thumb {
 .total__result_user {
     font-weight: 700;
     font-size: 18px;
+}
+
+.user-balance {
+    position: absolute;
+    padding: 10px 40px;
+    height: 63px;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border: 2px solid #fae217;
+    border-radius: 10px;
+    bottom: 5%;
+    right: 50px;
+    font-size: 20px;
+    font-weight: 700;
 }
 
 @keyframes change {
