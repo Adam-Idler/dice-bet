@@ -50,7 +50,7 @@ const createDiceElement = () => {
     diceItemsSum.splice(0, diceItemsSum.length);
 
     for (let i = 0; i < rangeSlider.value; i++) {
-        let diceItemValue = generateRandomNumber(2, 2);
+        let diceItemValue = generateRandomNumber(1, 6);
         diceItemElement = document.createElement('div');
         diceItemElement.classList.add('dice__item');
         diceItemsSum.push(diceItemValue);
