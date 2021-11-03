@@ -1,6 +1,11 @@
 body, * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
 }
 
 input[type=text],
@@ -10,6 +15,10 @@ input[type=number] {
     padding: 10px;
     border: 2px solid #fae217;
     border-radius: 10px;
+}
+
+input {
+    outline: none;
 }
 
 input[type=range] {
@@ -63,7 +72,20 @@ input[type=range]::-ms-thumb {
     cursor: pointer
 }
 
+.btn {
+    background-color: #7fee7f;
+    cursor: pointer;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+}
+
 .game__wrapper {
+    overflow: hidden;
     width: 40%;
     height: 100vh;
     margin: 0 auto;
@@ -131,18 +153,6 @@ input[type=range]::-ms-thumb {
     margin-bottom: 40px;
 }
 
-.start-game {
-    background-color: #7fee7f;
-    cursor: pointer;
-    padding: 10px 25px;
-    border: none;
-    border-radius: 10px;
-    color: #fff;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-}
-
 .tab-names {
     margin-top: 20px;
     display: flex;
@@ -157,6 +167,7 @@ input[type=range]::-ms-thumb {
     cursor: pointer;
     padding: 12px 10px;
     width: 33.333%;
+    transition: background-color .3s;
 }
 
 .tab-name__item_active {
@@ -177,6 +188,97 @@ input[type=range]::-ms-thumb {
     padding: 25px;
 }
 
+.tab-values__item {
+    display: none;
+}
+
+.tab-values__item_active {
+    display: block;
+}
+
 .user-exact-number {
     margin-top: 10px;
+}
+
+.dice__wrapper {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80px;
+}
+
+.dice__wrapper.change {
+    animation: change .7s linear both;
+}
+
+.dice__item {
+    margin-right: 20px;
+}
+
+.dice__item:last-child {
+    margin-right: 0;
+}
+
+.modal {
+    display: none;
+    position: absolute;
+    top: 50%;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    width: 20%;
+    height: 40%;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal__wrapper {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(60, 60, 60, 0.6);
+    top: 0;
+    left: 0;
+}
+
+.modal__result-title {
+    font-size: 28px;
+}
+
+.modal__result-title.win {
+    color: #7fee7f;
+}
+
+.modal__result-title.loose {
+    color: #ff5a5a; 
+}
+
+.modal__result-wrapper {
+    display: flex;
+}
+
+.total__result,
+.total__result_user {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+@keyframes change {
+    0% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-600px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
 }
