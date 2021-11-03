@@ -42,13 +42,18 @@ rangeSlider.addEventListener('input', () => {
 
 // Изменение количества кубиков
 const diceItemWrapper = document.querySelector('.dice__wrapper');
+const diceItemsSum = [];
+
 const createDiceElement = () => {
     diceItemWrapper.innerHTML = '';
+    diceItemsSum.splice(0, diceItemsSum.length);
+
     for (let i = 0; i < rangeSlider.value; i++) {
         let diceItemValue = generateRandomNumber(1, 6);
         diceItemElement = document.createElement('div');
         diceItemElement.classList.add('dice__item');
-        diceItemElement.setAttribute('data-value', diceItemValue);
+        diceItemsSum.push(diceItemValue);
+        // diceItemElement.setAttribute('data-value', diceItemValue);
 
         if (diceItemWrapper.hasAttribute('data-loaded') && i === rangeSlider.value - 1) {
             diceItemWrapper.removeAttribute('data-loaded');
@@ -67,69 +72,65 @@ createDiceElement();
 rangeSlider.addEventListener('change', createDiceElement);
 
 // Подсчет выпавших очков
-let diceItems = document.querySelectorAll('.dice__item');
-
-const countDiceItemsValue = () => {
-    diceItems = document.querySelectorAll('.dice__item');
-    let result = 0;
-    diceItems.forEach(item => {
-        result += +item.dataset.value;
-    });
-
-    return result;
-}
+const countDiceItemsValue = () => diceItemsSum.reduce((previousValue, currentValue) => previousValue + currentValue);
 
 // Открытие/закрытие модального окна
 const modalWrapper = document.querySelector('.modal__wrapper');
-const modalWin = document.querySelector('.modal_win');
-const modalLoose = document.querySelector('.modal_loose');
+const modalWindows = document.querySelectorAll('.modal');
 const modalCloseBtn = document.querySelectorAll('.continue-button');
-let userBet = document.querySelector('.user-bet');
+let userNumber = document.querySelector('.user-exact-number');
 
 const openModal = (modalName) => {
     modalWrapper.style.display = 'block';
 
-    if (modalName === 'win') {
-        modalWin.style.display = 'flex';
-        modalWin.classList.add('visible');
-        modalWin.querySelector('.total__result').textContent = countDiceItemsValue();
-        modalWin.querySelector('.total__result_user').textContent = +userBet.value;
-    } else if (modalName === 'loose') {
-        modalLoose.style.display = 'flex';
-        modalLoose.classList.add('visible');
-        modalLoose.querySelector('.total__result').textContent = countDiceItemsValue();
-        modalLoose.querySelector('.total__result_user').textContent = +userBet.value;
-    }
-}
+    modalWindows.forEach(modal => {
+        if (modal.classList.contains(`modal_${modalName}`)) {
+            modal.style.display = 'flex';
+            modal.classList.add('visible');
+
+            let totalResultDice = modal.querySelector('.total__result');
+            let totalResultUser = modal.querySelector('.total__result_user');
+
+            if (totalResultDice) totalResultDice.textContent = countDiceItemsValue()
+            if (totalResultUser) totalResultUser.textContent = +userNumber.value
+        }
+    });
+};
 
 const closeModal = () => {
     modalWrapper.style.display = 'none';
     document.querySelector('.visible').style.display = 'none';
-}
+};
 
 modalCloseBtn.forEach(btn => {
     btn.addEventListener('click', closeModal);
 });
-modalWrapper.addEventListener('click', closeModal);
+modalWrapper.addEventListener('click', (e) => {
+    if (e.target !== e.currentTarget) return;
+    closeModal();
+});
 
 // Обработка нажатие на кнопку старта игры
 const startBtn = document.querySelector('.start-game');
 
-
 const startBtnClickHandler = () => {
+    if (!userNumber.value) {
+        openModal('error');
+        return;
+    }
+
     createDiceElement();
     let diceValue = countDiceItemsValue();
 
-    if (+userBet.value === diceValue) {
+    if (+userNumber.value === diceValue) {
         setTimeout(() => openModal('win'), 900)
     } else {
         setTimeout(() => openModal('loose'), 900)
     }
-
-    
 };
+
 startBtn.addEventListener('click', startBtnClickHandler);
-userBet.addEventListener('keyup', (e) => {
+userNumber.addEventListener('keyup', (e) => {
     if(e.keyCode == 13){
         e.preventDefault();
         startBtnClickHandler();
