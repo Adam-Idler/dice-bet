@@ -91,10 +91,27 @@
                             </div>
                             <button class="btn continue-button" type="button">Продолжить</button>
                         </div>
+                        <div class="modal modal_game-over">
+                            <h3 class="modal__result-title loose">Игра окончена!</h3>
+                            <div class="modal__result-wrapper">
+                                <p class="game__text">К сожалению, Ваш баланс равен 0 и Вы проиграли!</p>
+                            </div>
+                            <div class="modal__result-wrapper">
+                                <p class="game__text">Ваш баланс автоматически пополнится через 1 час.</p>
+                            </div>
+                            <button class="btn continue-button" type="button">Начать заново</button>
+                        </div>
+                        <div class="modal modal_ban">
+                            <h3 class="modal__result-title loose">Час ещё не прошел!</h3>
+                            <div class="modal__result-wrapper">
+                                <p class="game__text">В прошлый раз Вы проиграли и время блокировки еще не прошло!</p>
+                            </div>
+                            <button class="btn continue-button" type="button">Понятно</button>
+                        </div>
                     </div>
 
                     <div class="user-balance">
-                        <span class="user-balance_value">1000</span>₽
+                        <span class="user-balance_value">0</span>₽
                     </div>
                 </div>
             </div>

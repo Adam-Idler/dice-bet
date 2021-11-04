@@ -1,6 +1,24 @@
 // Common
 const generateRandomNumber = (min, max) => Math.floor(Math.random( ) * (max - min + 1)) + min;
 
+// Проверка на блокировку страницы
+document.addEventListener('DOMContentLoaded', () => {
+    const blockTime = localStorage.getItem('blockTime');
+    if (blockTime) {
+        if (+new Date() >= +blockTime) {
+            localStorage.removeItem('blockTime');
+            localStorage.setItem('balance', 1000);
+            userBalance.textContent = 1000;
+        } else {
+            openModal('ban');
+            document.querySelectorAll('input, button:not(.continue-button)').forEach(item => item.disabled = true);
+        }
+    } else {
+        localStorage.setItem('balance', 1000);
+        userBalance.textContent = 1000;
+    }
+});
+
 // Табы
 const tabs = document.querySelector('.tab-names'); 
 const tabNames = tabs.querySelectorAll('.tab-name__item');
@@ -77,7 +95,7 @@ const countDiceItemsValue = () => diceItemsSum.reduce((previousValue, currentVal
 // Открытие/закрытие модального окна
 const modalWrapper = document.querySelector('.modal__wrapper');
 const modalWindows = document.querySelectorAll('.modal');
-const modalCloseBtn = document.querySelectorAll('.continue-button');
+const modalCloseBtns = document.querySelectorAll('.continue-button');
 let userNumber = document.querySelector('.user-exact-number');
 
 const openModal = (modalName) => {
@@ -101,11 +119,12 @@ const openModal = (modalName) => {
 };
 
 const closeModal = () => {
+    console.log(1);
     modalWrapper.style.display = 'none';
     document.querySelector('.visible').style.display = 'none';
 };
 
-modalCloseBtn.forEach(btn => {
+modalCloseBtns.forEach(btn => {
     btn.addEventListener('click', closeModal);
 });
 modalWrapper.addEventListener('click', (e) => {
@@ -120,7 +139,9 @@ document.addEventListener('keypress', (e) => {
 });
 
 // Реализация ставки игрока
+let balance = localStorage.getItem('balance') || 1000;
 const userBalance = document.querySelector('.user-balance_value');
+userBalance.textContent = balance;
 const userBet = document.querySelector('.user-bet');
 let exactNumberRatio = 1.5 * rangeSlider.value;
 let moreOrLessRatio = 2;
@@ -144,7 +165,15 @@ const startBtnClickHandler = () => {
         setTimeout(() => openModal('win'), 900);
         userBalance.textContent = +userBalance.textContent + +userBet.value * exactNumberRatio;
     } else {
-        setTimeout(() => openModal('loose'), 900)
+        setTimeout(() => openModal('loose'), 900);
+    }
+
+    localStorage.setItem('balance', userBalance.textContent);
+
+    if (userBalance.textContent == 0) {
+        setTimeout(() => openModal('game-over'), 900);
+        document.querySelectorAll('input, button:not(.continue-button)').forEach(item => item.disabled = true);
+        localStorage.setItem('blockTime', +new Date() + (10000 * 1));
     }
 };
 
