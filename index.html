@@ -42,12 +42,40 @@
                             <div class="tab-name__item">Чётное/Нечётное</div>
                         </div>
                         <div class="tab-values">
-                            <div class="tab-values__item tab-values__item_active">
+                            <div class="tab-values__item tab-values__item_exact tab-values__item_active">
                                 <p class="game__text">На какое число ставим?</p>
                                 <input type="text" class="user-exact-number" placeholder="Введите число очков">
                             </div>
-                            <div class="tab-values__item"></div>
-                            <div class="tab-values__item"></div>
+                            <div class="tab-values__item tab-values__item_more-or-less">
+                                <p class="game__text">Число будет:</p>
+                                <div class="more-or-less__wrapper">
+                                    <label>
+                                        <input type="radio" name="more-or-less" value="less"> 
+                                        <span>Меньше <span class="middle"></span></span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="more-or-less" value="exact" checked> 
+                                        <span>Равно <span class="middle"></span></span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="more-or-less" value="more"> 
+                                        <span>Больше <span class="middle"></span></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="tab-values__item tab-values__item_even">
+                                <p class="game__text">Число будет:</p>
+                                <div class="even__wrapper">
+                                    <label>
+                                        <input type="radio" name="even" value="even" checked> 
+                                        <span>Чётным</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="even" value="odd"> 
+                                        <span>Нечётным</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

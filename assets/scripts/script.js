@@ -3,7 +3,7 @@ const generateRandomNumber = (min, max) => Math.floor(Math.random( ) * (max - mi
 
 // Проверка на блокировку страницы
 document.addEventListener('DOMContentLoaded', () => {
-    const blockTime = localStorage.getItem('blockTime');
+    let blockTime = localStorage.getItem('blockTime');
     if (blockTime) {
         if (+new Date() >= +blockTime) {
             localStorage.removeItem('blockTime');
@@ -14,9 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
             timer(+blockTime);
             document.querySelectorAll('input, button:not(.continue-button, .start-game)').forEach(item => item.disabled = true);
         }
-    } else {
-        localStorage.setItem('balance', 1000);
-        userBalance.textContent = 1000;
     }
 });
 
@@ -41,7 +38,6 @@ const timer = (deadline) => {
         let minutes = getNullAdd(Math.floor((timeRemaining / 60) % 60));
         let seconds = getNullAdd(Math.floor(timeRemaining % 60));
         return {timeRemaining, hours, minutes, seconds}
-        
     }
     const updateClock = () => {
         let getTime = getTimeRemaining();
@@ -97,6 +93,16 @@ tabs.addEventListener('click', (e) => {
     }
 });
 
+// Нахождение среднего значения в кубиках
+const middles = document.querySelectorAll('.tab-values__item_more-or-less .middle');
+let middleNumber;
+const findMiddle = () => {
+    middleNumber = Math.ceil(6 * rangeSlider.value / 2);
+    middles.forEach(item => {
+        item.textContent = middleNumber;
+    });
+};
+
 // Range slider
 const rangeSlider = document.querySelector('.dice-count');
 const sliderValue = document.querySelector('.dice-count__value');
@@ -133,6 +139,8 @@ const createDiceElement = () => {
         diceItemElement.innerHTML = diceItemTemplate;
         diceItemWrapper.appendChild(diceItemElement);
     }
+
+    findMiddle();
 };
 createDiceElement();
 rangeSlider.addEventListener('change', createDiceElement);
@@ -140,35 +148,45 @@ rangeSlider.addEventListener('change', createDiceElement);
 // Подсчет выпавших очков
 const countDiceItemsValue = () => diceItemsSum.reduce((previousValue, currentValue) => previousValue + currentValue);
 
+// Фукнции победы/проигрыша
+const win = (ratio, winNumber) => {
+    setTimeout(() => {
+        openModal('win', winNumber, ratio);
+        userBalance.textContent = (+userBalance.textContent + +userBet.value * ratio).toFixed(0);
+        localStorage.setItem('balance', userBalance.textContent);
+    }, 900);
+};
+
+const loose = (looseNumber) => setTimeout(() => openModal('loose', looseNumber), 900);
+
 // Открытие/закрытие модального окна
 const modalWrapper = document.querySelector('.modal__wrapper');
 const modalWindows = document.querySelectorAll('.modal');
 const modalCloseBtns = document.querySelectorAll('.continue-button');
 let userNumber = document.querySelector('.user-exact-number');
 
-const openModal = (modalName) => {
+const openModal = (modalName, winNumber, ratio) => {
     modalWrapper.style.display = 'block';
 
     modalWindows.forEach(modal => {
         if (modal.classList.contains(`modal_${modalName}`)) {
-            modal.style.display = 'flex';
             modal.classList.add('visible');
 
             let totalResultDice = modal.querySelector('.total__result');
             let totalResultUser = modal.querySelector('.total__result_user');
 
-            if (totalResultDice) totalResultDice.textContent = countDiceItemsValue()
-            if (totalResultUser) totalResultUser.textContent = +userNumber.value
+            if (totalResultDice) totalResultDice.textContent = countDiceItemsValue();
+            if (totalResultUser) totalResultUser.textContent = winNumber;
 
-            if (modalName === 'win') modal.querySelector('.winning_result').textContent = +userBet.value * exactNumberRatio;
-            if (modalName === 'loose') modal.querySelector('.loose_result').textContent = +userBet.value;
+            if (modalName === 'win') modal.querySelector('.winning_result').textContent = (+userBet.value * ratio).toFixed(0);
+            if (modalName === 'loose') modal.querySelector('.loose_result').textContent = (+userBet.value).toFixed(0);
         }
     });
 };
 
 const closeModal = () => {
     modalWrapper.style.display = 'none';
-    document.querySelector('.visible').style.display = 'none';
+    document.querySelector('.visible').classList.remove('visible');
 };
 
 modalCloseBtns.forEach(btn => {
@@ -190,47 +208,110 @@ let balance = localStorage.getItem('balance') || 1000;
 const userBalance = document.querySelector('.user-balance_value');
 userBalance.textContent = balance;
 const userBet = document.querySelector('.user-bet');
-let exactNumberRatio = 1.5 * rangeSlider.value;
-let moreOrLessRatio = 2;
+let exactNumberRatio = 1.5 * (rangeSlider.value * 1.1);
+let moreOrLessRatio = 1.5 * rangeSlider.value;
 let evenRatio = 2;
+let diceValue;
 
 // Обработка нажатие на кнопку старта игры
 const startBtn = document.querySelector('.start-game');
 
 const startBtnClickHandler = () => {
-    if (localStorage.getItem('blockTime')) {
+    blockTime = localStorage.getItem('blockTime');
+    if (blockTime) {
         openModal('ban');
-        return;
-    }
-
-    if (!userNumber.value) {
-        openModal('error');
+        timer(+blockTime);
         return;
     }
 
     userBalance.textContent -= +userBet.value;
 
-    createDiceElement();
-    let diceValue = countDiceItemsValue();
+    const activeTabItem = document.querySelector('.tab-values__item_active');
 
-    if (+userNumber.value === diceValue) {
-        setTimeout(() => {
-            openModal('win');
-            userBalance.textContent = +userBalance.textContent + +userBet.value * exactNumberRatio;
-        }, 900);
-    } else {
-        setTimeout(() => openModal('loose'), 900);
+    if (activeTabItem.classList.contains('tab-values__item_exact')) {
+        if (!userNumber.value) {
+            openModal('error');
+            return;
+        }
+
+        createDiceElement();
+        diceValue = countDiceItemsValue();
+
+        if (+userNumber.value === diceValue) {
+            win(exactNumberRatio, userNumber.value);
+        } else {
+            loose(userNumber.value);
+        }
+
+    } else if (activeTabItem.classList.contains('tab-values__item_more-or-less')) {
+        const checked = activeTabItem.querySelector('input[type="radio"]:checked').value;
+        createDiceElement();
+        diceValue = countDiceItemsValue();
+        switch (checked) {
+            case 'exact':
+                moreOrLessRatio = +(1.5 * (rangeSlider.value * 1.2)).toFixed(0);
+                if (diceValue == middleNumber) {
+                    win(moreOrLessRatio, `Равно ${middleNumber}`);
+                } else {
+                    loose(`Равно ${middleNumber}`);
+                }
+                break;
+            case 'more':
+                moreOrLessRatio = 1.5 * rangeSlider.value;
+                if (diceValue > middleNumber) {
+                    win(moreOrLessRatio, `Больше ${middleNumber}`);
+                } else {
+                    loose(`Больше ${middleNumber}`);
+                }
+                break;
+            case 'less':
+                moreOrLessRatio = 1.5 * rangeSlider.value;
+                if (diceValue < middleNumber) {
+                    win(moreOrLessRatio, `Меньше ${middleNumber}`);
+                } else {
+                    loose(`Меньше ${middleNumber}` );
+                }
+                break;
+            default:
+                break;
+        }
+    } else if (activeTabItem.classList.contains('tab-values__item_even')) {
+        const checked = activeTabItem.querySelector('input[type="radio"]:checked').value;
+        createDiceElement();
+        diceValue = countDiceItemsValue();
+        switch (checked) {
+            case 'even':
+                if (diceValue % 2 === 0) {
+                    win(evenRatio, 'Чётное');
+                } else {
+                    loose('Чётное');
+                }
+                break;
+            case 'odd':
+                evenRatio = 1.5 * rangeSlider.value;
+                if (diceValue % 2 !== 0) {
+                    win(evenRatio, 'Нечётное');
+                } else {
+                    loose('Нечётное');
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     localStorage.setItem('balance', userBalance.textContent);
 
-    if (userBalance.textContent <= 0) {
-        setTimeout(() => openModal('game-over'), 900);
-        document.querySelectorAll('input, button:not(.continue-button, .start-game)').forEach(item => item.disabled = true);
-        let deadline = +new Date() + (3600 * 1000);
-        timer(deadline);
-        localStorage.setItem('blockTime', deadline);
-    }
+    setTimeout(() => {
+        if (userBalance.textContent <= 0) {
+            closeModal();
+            openModal('game-over');
+            document.querySelectorAll('input, button:not(.continue-button, .start-game)').forEach(item => item.disabled = true);
+            let deadline = +new Date() + (3600 * 1000);
+            timer(deadline);
+            localStorage.setItem('blockTime', deadline);
+        }
+    }, 900)
 };
 
 startBtn.addEventListener('click', startBtnClickHandler);
