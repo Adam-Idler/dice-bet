@@ -99,10 +99,34 @@
                             <div class="modal__result-wrapper">
                                 <p class="game__text">Ваш баланс автоматически пополнится через 1 час.</p>
                             </div>
+                            <div class="timer">
+                                <div class="timer-action">
+                                    До конца блокировки осталось:
+                                </div>
+                                <div class="timer-numbers" id="timer">
+                                    <span id="timer-hours"></span>
+                                    <span>:</span>
+                                    <span id="timer-minutes"></span>
+                                    <span>:</span>
+                                    <span id="timer-seconds"></span>
+                                </div>
+                            </div>
                             <button class="btn continue-button" type="button">Начать заново</button>
                         </div>
                         <div class="modal modal_ban">
                             <h3 class="modal__result-title loose">Час ещё не прошел!</h3>
+                            <div class="timer">
+                                <div class="timer-action">
+                                    До конца блокировки осталось:
+                                </div>
+                                <div class="timer-numbers" id="timer">
+                                    <span id="timer-hours"></span>
+                                    <span>:</span>
+                                    <span id="timer-minutes"></span>
+                                    <span>:</span>
+                                    <span id="timer-seconds"></span>
+                                </div>
+                            </div>
                             <div class="modal__result-wrapper">
                                 <p class="game__text">В прошлый раз Вы проиграли и время блокировки еще не прошло!</p>
                             </div>

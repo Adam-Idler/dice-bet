@@ -11,13 +11,61 @@ document.addEventListener('DOMContentLoaded', () => {
             userBalance.textContent = 1000;
         } else {
             openModal('ban');
-            document.querySelectorAll('input, button:not(.continue-button)').forEach(item => item.disabled = true);
+            timer(+blockTime);
+            document.querySelectorAll('input, button:not(.continue-button, .start-game)').forEach(item => item.disabled = true);
         }
     } else {
         localStorage.setItem('balance', 1000);
         userBalance.textContent = 1000;
     }
 });
+
+// Таймер
+const timer = (deadline) => {
+    const timerHours = document.querySelector(`.visible #timer-hours`);
+    const timerMinutes = document.querySelector(`.visible #timer-minutes`);
+    const timerSeconds = document.querySelector(`.visible #timer-seconds`);
+
+    const getNullAdd = function (param) {
+        if (param < 10) {
+            return '0' + param;
+        } else {
+            return param
+        }
+    }
+    const getTimeRemaining = () => {
+        let dateStop = new Date(deadline).getTime()
+        let dateNow = new Date().getTime();
+        let timeRemaining = (dateStop - dateNow) / 1000;
+        let hours = getNullAdd(Math.floor(timeRemaining / 60 / 60));
+        let minutes = getNullAdd(Math.floor((timeRemaining / 60) % 60));
+        let seconds = getNullAdd(Math.floor(timeRemaining % 60));
+        return {timeRemaining, hours, minutes, seconds}
+        
+    }
+    const updateClock = () => {
+        let getTime = getTimeRemaining();
+        if (getTime.timeRemaining < 0) {
+            timerHours.textContent = getNullAdd(0);
+            timerMinutes.textContent = getNullAdd(0);
+            timerSeconds.textContent = getNullAdd(0);
+
+            localStorage.removeItem('blockTime');
+            localStorage.setItem('balance', 1000);
+            userBalance.textContent = 1000;
+            document.querySelectorAll('input, button:not(.continue-button, .start-game)').forEach(item => item.disabled = false);
+        } else {
+            timerHours.textContent = getTime.hours;
+            timerMinutes.textContent = getTime.minutes;
+            timerSeconds.textContent = getTime.seconds;
+        }
+    }
+    let getTime = getTimeRemaining()
+    if (getTime.timeRemaining > 0) {
+        setInterval(updateClock, 1000)
+    }
+    updateClock()
+}
 
 // Табы
 const tabs = document.querySelector('.tab-names'); 
@@ -119,7 +167,6 @@ const openModal = (modalName) => {
 };
 
 const closeModal = () => {
-    console.log(1);
     modalWrapper.style.display = 'none';
     document.querySelector('.visible').style.display = 'none';
 };
@@ -131,8 +178,8 @@ modalWrapper.addEventListener('click', (e) => {
     if (e.target !== e.currentTarget) return;
     closeModal();
 });
-document.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && modalWrapper.style.display === 'block') {
+document.addEventListener('keyup', (e) => {
+    if ((e.key === 'Enter' || e.key === 'Escape') && modalWrapper.style.display === 'block') {
         e.preventDefault();
         closeModal();
     }
@@ -151,6 +198,11 @@ let evenRatio = 2;
 const startBtn = document.querySelector('.start-game');
 
 const startBtnClickHandler = () => {
+    if (localStorage.getItem('blockTime')) {
+        openModal('ban');
+        return;
+    }
+
     if (!userNumber.value) {
         openModal('error');
         return;
@@ -162,8 +214,10 @@ const startBtnClickHandler = () => {
     let diceValue = countDiceItemsValue();
 
     if (+userNumber.value === diceValue) {
-        setTimeout(() => openModal('win'), 900);
-        userBalance.textContent = +userBalance.textContent + +userBet.value * exactNumberRatio;
+        setTimeout(() => {
+            openModal('win');
+            userBalance.textContent = +userBalance.textContent + +userBet.value * exactNumberRatio;
+        }, 900);
     } else {
         setTimeout(() => openModal('loose'), 900);
     }
@@ -172,20 +226,22 @@ const startBtnClickHandler = () => {
 
     if (userBalance.textContent <= 0) {
         setTimeout(() => openModal('game-over'), 900);
-        document.querySelectorAll('input, button:not(.continue-button)').forEach(item => item.disabled = true);
-        localStorage.setItem('blockTime', +new Date() + (3600 * 1000));
+        document.querySelectorAll('input, button:not(.continue-button, .start-game)').forEach(item => item.disabled = true);
+        let deadline = +new Date() + (3600 * 1000);
+        timer(deadline);
+        localStorage.setItem('blockTime', deadline);
     }
 };
 
 startBtn.addEventListener('click', startBtnClickHandler);
 userNumber.addEventListener('keyup', (e) => {
-    if (e.keyCode == 13) {
+    if (e.key == 'Enter') {
         e.preventDefault();
         startBtnClickHandler();
     }
 });
 userBet.addEventListener('keyup', (e) => {
-    if (e.keyCode == 13) {
+    if (e.key == 'Enter') {
         e.preventDefault();
         startBtnClickHandler();
     }

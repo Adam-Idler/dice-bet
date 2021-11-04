@@ -239,7 +239,30 @@ input[type=range]::-ms-thumb {
     align-items: center;
 }
 
+@media (min-height: 450px) {
+    .modal {
+        height: 55%;
+    }
+}
+
+@media (min-height: 650px) {
+    .modal {
+        height: 35%;
+    }
+}
+
+.modal_loose,
+.modal_win {
+    min-height: 270px;
+}
+
+.modal_error {
+    height: 30%;
+    min-height: 210px;
+}
+
 .modal_ban {
+    min-height: 350px;
     text-align: center;
 }
 
@@ -251,6 +274,18 @@ input[type=range]::-ms-thumb {
     background-color: rgba(60, 60, 60, 0.6);
     top: 0;
     left: 0;
+}
+
+.timer {
+    font-size: 16px;
+    text-align: center;
+}
+
+.timer-numbers {
+    margin-top: 10px;
+    color: #ff5a5a;
+    font-size: 18px;
+    font-weight: 700;
 }
 
 .modal__result-title {
