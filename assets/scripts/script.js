@@ -170,10 +170,10 @@ const startBtnClickHandler = () => {
 
     localStorage.setItem('balance', userBalance.textContent);
 
-    if (userBalance.textContent == 0) {
+    if (userBalance.textContent <= 0) {
         setTimeout(() => openModal('game-over'), 900);
         document.querySelectorAll('input, button:not(.continue-button)').forEach(item => item.disabled = true);
-        localStorage.setItem('blockTime', +new Date() + (10000 * 1));
+        localStorage.setItem('blockTime', +new Date() + (3600 * 1000));
     }
 };
 
