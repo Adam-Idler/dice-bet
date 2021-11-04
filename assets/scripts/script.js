@@ -288,7 +288,6 @@ const startBtnClickHandler = () => {
                 }
                 break;
             case 'odd':
-                evenRatio = 1.5 * rangeSlider.value;
                 if (diceValue % 2 !== 0) {
                     win(evenRatio, 'Нечётное');
                 } else {
