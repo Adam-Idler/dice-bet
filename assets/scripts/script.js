@@ -110,7 +110,11 @@ const sliderValue = document.querySelector('.dice-count__value');
 sliderValue.textContent = rangeSlider.value;
 rangeSlider.addEventListener('input', () => {
     sliderValue.textContent = rangeSlider.value;
-    exactNumberRatio = 1.5 * rangeSlider.value;
+    // exactNumberRatio = rangeSlider.value == 1 ? 1.5 : rangeSlider.value - 0.3;
+    // moreOrLessRatio = 1.2 * rangeSlider.value;
+    // evenRatio = rangeSlider.value == 1 ? 1.3 : 1.5;
+
+    setTitleForTabName();
 });
 
 // Изменение количества кубиков
@@ -208,10 +212,74 @@ let balance = localStorage.getItem('balance') || 1000;
 const userBalance = document.querySelector('.user-balance_value');
 userBalance.textContent = balance;
 const userBet = document.querySelector('.user-bet');
-let exactNumberRatio = 1.5 * (rangeSlider.value * 1.1);
-let moreOrLessRatio = 1.5 * rangeSlider.value;
-let evenRatio = 2;
+
+const tabNameExact = document.querySelector('.tab-name__item_exact')
+const tabNameMoreOrLess = document.querySelector('.tab-name__item_more-or-less')
+const tabNameEven = document.querySelector('.tab-name__item_even')
+
+let exactNumberRatio = rangeSlider.value == 1 ? 1.5 : rangeSlider.value - 0.5;
+let moreOrLessRatio = 1.7;
+let evenRatio = rangeSlider.value == 1 ? 1.3 : 1.5;
 let diceValue;
+tabNameExact.setAttribute('title', `Коэффициент ${exactNumberRatio}`);
+tabNameMoreOrLess.setAttribute('title', `Коэффициент ${moreOrLessRatio}`);
+tabNameEven.setAttribute('title', `Коэффициент ${evenRatio}`);
+
+// Задание title для активного заголовка
+function setTitleForTabName() {
+    let activeTabNameItem = document.querySelector('.tab-name__item_active');
+    if (activeTabNameItem.classList.contains('tab-name__item_exact')) {
+        exactNumberRatio = rangeSlider.value == 1 ? 1.5 : rangeSlider.value - 0.5
+        activeTabNameItem.setAttribute('title', `Коэффициент ${exactNumberRatio}`)
+    }
+    if (activeTabNameItem.classList.contains('tab-name__item_more-or-less')) {
+        activeTabNameItem.setAttribute('title', `Коэффициент ${moreOrLessRatio}`)
+    }
+    if (activeTabNameItem.classList.contains('tab-name__item_even')) {
+        evenRatio = rangeSlider.value == 1 ? 1.3 : 1.5
+        activeTabNameItem.setAttribute('title', `Коэффициент ${evenRatio}`)
+    }
+}
+
+// Валидация
+userBet.addEventListener("input", e => {
+    e.target.value = e.target.value.replace(/[\D]/, "");
+    if (+e.target.value > +userBalance.textContent) e.target.value =e.target.value.slice(0, -1);
+
+});
+userNumber.addEventListener("input", e => {
+    e.target.value = e.target.value.replace(/[\D]/, "");
+    if (+e.target.value > 6 * rangeSlider.value) e.target.value = e.target.value.slice(0, -1);
+});
+userNumber.addEventListener("change", e => {
+    if (+e.target.value < rangeSlider.value) e.target.value = e.target.value.slice(0, -1);
+});
+
+// Переключение коэфффициента для more-or-less
+const moreOrLessWrapper = document.querySelector('.more-or-less__wrapper');
+
+moreOrLessWrapper.addEventListener('click', e => {
+    if (e.target.getAttribute('name') !== 'more-or-less') {
+        return;
+    }
+
+    let checked = moreOrLessWrapper.querySelector('input:checked').value;
+
+    switch (checked) {
+        case 'exact':
+            moreOrLessRatio = rangeSlider.value == 1 ? 1.6 : rangeSlider.value - 0.3;
+            break;
+        case 'more':
+            moreOrLessRatio = rangeSlider.value == 1 ? 1.2 : rangeSlider.value - 0.7;
+            break;
+        case 'less':
+            moreOrLessRatio = rangeSlider.value == 1 ? 1.3 : rangeSlider.value - 0.6;
+            break;
+        default:
+            break;
+    }
+    tabNameMoreOrLess.setAttribute('title', `Коэффициент ${moreOrLessRatio}`);
+});
 
 // Обработка нажатие на кнопку старта игры
 const startBtn = document.querySelector('.start-game');
@@ -221,6 +289,11 @@ const startBtnClickHandler = () => {
     if (blockTime) {
         openModal('ban');
         timer(+blockTime);
+        return;
+    }
+
+    if (!userBet.value) {
+        openModal('no-bet');
         return;
     }
 
@@ -249,7 +322,6 @@ const startBtnClickHandler = () => {
         diceValue = countDiceItemsValue();
         switch (checked) {
             case 'exact':
-                moreOrLessRatio = +(1.5 * (rangeSlider.value * 1.2)).toFixed(0);
                 if (diceValue == middleNumber) {
                     win(moreOrLessRatio, `Равно ${middleNumber}`);
                 } else {
@@ -257,7 +329,6 @@ const startBtnClickHandler = () => {
                 }
                 break;
             case 'more':
-                moreOrLessRatio = 1.5 * rangeSlider.value;
                 if (diceValue > middleNumber) {
                     win(moreOrLessRatio, `Больше ${middleNumber}`);
                 } else {
@@ -265,7 +336,6 @@ const startBtnClickHandler = () => {
                 }
                 break;
             case 'less':
-                moreOrLessRatio = 1.5 * rangeSlider.value;
                 if (diceValue < middleNumber) {
                     win(moreOrLessRatio, `Меньше ${middleNumber}`);
                 } else {

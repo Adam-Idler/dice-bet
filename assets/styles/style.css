@@ -223,6 +223,18 @@ input[type=range]::-ms-thumb {
     margin-right: 0;
 }
 
+.timer {
+    font-size: 16px;
+    text-align: center;
+}
+
+.timer-numbers {
+    margin-top: 10px;
+    color: #ff5a5a;
+    font-size: 18px;
+    font-weight: 700;
+}
+
 .modal {
     display: none;
     position: absolute;
@@ -251,6 +263,10 @@ input[type=range]::-ms-thumb {
     }
 }
 
+.modal_no-bet {
+    height: 35%;
+}
+
 .modal_loose,
 .modal_win {
     min-height: 270px;
@@ -274,18 +290,6 @@ input[type=range]::-ms-thumb {
     background-color: rgba(60, 60, 60, 0.6);
     top: 0;
     left: 0;
-}
-
-.timer {
-    font-size: 16px;
-    text-align: center;
-}
-
-.timer-numbers {
-    margin-top: 10px;
-    color: #ff5a5a;
-    font-size: 18px;
-    font-weight: 700;
 }
 
 .modal__result-title {

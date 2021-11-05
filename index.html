@@ -37,9 +37,9 @@
                     <p class="game__text">Ставить на:</p>
                     <div class="tabs">
                         <div class="tab-names">
-                            <div class="tab-name__item tab-name__item_active">Определенное число</div>
-                            <div class="tab-name__item">Больше или меньше</div>
-                            <div class="tab-name__item">Чётное/Нечётное</div>
+                            <div class="tab-name__item tab-name__item_exact tab-name__item_active">Определенное число</div>
+                            <div class="tab-name__item tab-name__item_more-or-less">Больше или меньше</div>
+                            <div class="tab-name__item tab-name__item_even">Чётное/Нечётное</div>
                         </div>
                         <div class="tab-values">
                             <div class="tab-values__item tab-values__item_exact tab-values__item_active">
@@ -116,6 +116,13 @@
                             <h3 class="modal__result-title loose">Ошибка!</h3>
                             <div class="modal__result-wrapper">
                                 <p class="game__text">Вы не выбрали на что ставить!</p>
+                            </div>
+                            <button class="btn continue-button" type="button">Продолжить</button>
+                        </div>
+                        <div class="modal modal_no-bet">
+                            <h3 class="modal__result-title loose">Ошибка!</h3>
+                            <div class="modal__result-wrapper">
+                                <p class="game__text">Вы не сделали ставку!</p>
                             </div>
                             <button class="btn continue-button" type="button">Продолжить</button>
                         </div>
